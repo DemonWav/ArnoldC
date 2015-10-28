@@ -181,10 +181,8 @@ class ArnoldParser extends Parser {
   }
 
   def Number: Rule1[NumberNode] = rule {
-    oneOrMore("0" - "9") ~> ((matched: String) => NumberNode(matched.toFloat)) |
-      "-" ~ oneOrMore("0" - "9") ~> ((matched: String) => NumberNode(-matched.toFloat)) |
-      oneOrMore("0" - "9") ~ "." ~ oneOrMore("0" - "9") ~> ((matched: String) => NumberNode(matched.toFloat)) |
-      "-" ~ oneOrMore("0" - "9") ~ "." ~ oneOrMore("0" - "9") ~> ((matched: String) => NumberNode(matched.toFloat))
+    group(optional("-") ~ oneOrMore("0" - "9") ~ "." ~ oneOrMore("0" - "9")) ~> ((matched: String) => NumberNode(matched.toFloat)) |
+      group(optional("-") ~ oneOrMore("0" - "9")) ~> ((matched: String) => NumberNode(matched.toFloat))
   }
 
   def Boolean: Rule1[NumberNode] = rule {
