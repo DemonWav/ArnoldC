@@ -14,7 +14,7 @@ Although the one-liners of Arnold Schwarzenegger are fairly well known the true 
 
 ##Quick Start
 
-	wget http://lhartikk.github.io/ArnoldC.jar
+	wget https://github.com/DemonWav/ArnoldC/releases/download/0.1/ArnoldC.jar
 	echo -e "IT'S SHOWTIME\nTALK TO THE HAND \"hello world\"\nYOU HAVE BEEN TERMINATED" > hello.arnoldc
 	java -jar ArnoldC.jar hello.arnoldc
 	java hello
