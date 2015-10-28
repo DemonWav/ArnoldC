@@ -10,6 +10,8 @@ case class ConditionNode(condition: OperandNode, ifBranch: List[AstNode], elseBr
     val conclude = new Label()
     val falseLabel = new Label()
     condition.generate(mv, symbolTable)
+    mv.visitInsn(FCONST_0)
+    mv.visitInsn(FCMPL)
     mv.visitJumpInsn(IFEQ, falseLabel)
     ifBranch.foreach(_.generate(mv, symbolTable))
     mv.visitJumpInsn(GOTO, conclude)

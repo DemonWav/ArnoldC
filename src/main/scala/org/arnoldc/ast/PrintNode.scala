@@ -13,7 +13,7 @@ case class PrintNode(operand: AstNode) extends StatementNode {
       mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V")
     }
     else {
-      mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(I)V")
+      mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(F)V")
     }
   }
 }

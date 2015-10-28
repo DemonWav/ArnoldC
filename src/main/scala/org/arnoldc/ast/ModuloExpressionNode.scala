@@ -9,6 +9,6 @@ case class ModuloExpressionNode(expression: AstNode ,operand: AstNode ) extends 
   def generate(mv: MethodVisitor, symbolTable: SymbolTable) {
     expression.generate(mv, symbolTable)
     operand.generate(mv, symbolTable)
-    mv.visitInsn(IREM)
+    mv.visitInsn(FREM)
   }
 }

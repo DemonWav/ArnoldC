@@ -1,13 +1,11 @@
 package org.arnoldc
 
 import java.util.Locale
-import javax.speech.Central
-import javax.speech.synthesis.Synthesizer
-import javax.speech.synthesis.SynthesizerModeDesc
-import javax.speech.synthesis.Voice
-import com.sun.speech.freetts.audio.AudioPlayer
-import com.sun.speech.freetts.audio.SingleFileAudioPlayer
 import javax.sound.sampled.AudioFileFormat.Type
+import javax.speech.Central
+import javax.speech.synthesis.{Synthesizer, SynthesizerModeDesc, Voice}
+
+import com.sun.speech.freetts.audio.SingleFileAudioPlayer
 import org.arnoldc.ast._
 
 object Declaimer {
@@ -23,7 +21,7 @@ object Declaimer {
   def say(text: String) = SpeechUtils.doSpeak(text + "!\n")
 
   def declaim(node: AstNode): Unit = node match {
-    case RootNode(methods) => methods.map(m => declaim(m))
+    case RootNode(methods) => methods.foreach(m => declaim(m))
     case MainMethodNode(stmts) =>
       say(p.BeginMain)
       stmts foreach declaim
@@ -32,7 +30,7 @@ object Declaimer {
       say(s"${p.DeclareMethod} $name")
       args.foreach(a => say(s"${p.MethodArguments} ${a.variableName}"))
       if (ret) say(p.NonVoidMethod);
-      stmts.map(s => declaim(s))
+      stmts.foreach(s => declaim(s))
       say(p.EndMethodDeclaration)
 
     case AssignVariableNode(name, expr) =>
@@ -43,8 +41,8 @@ object Declaimer {
     case PrintNode(what) =>
       say(p.Print)
       declaim(what)
-    case DeclareIntNode(name, value) =>
-      say(s"${p.DeclareInt} $name")
+    case DeclareNumNode(name, value) =>
+      say(s"${p.DeclareNum} $name")
       say(s"${p.SetInitialValue} $value")
     case ConditionNode(condition, ifStmts, elseStmts) =>
       say(p.If)
@@ -70,7 +68,7 @@ object Declaimer {
       say(s"${p.Read} $variable")
     case ReturnNode(expr) =>
       say(p.Return)
-      expr.map { x => declaim(x) }
+      expr.foreach { x => declaim(x) }
 
     case AndNode(expr1, expr2) =>
       declaim(expr1)
@@ -130,18 +128,18 @@ object SpeechUtils {
   synthesizer.allocate()
   synthesizer.resume()
 
-  val smd = synthesizer.getEngineModeDesc().asInstanceOf[SynthesizerModeDesc]
-  val voices = smd.getVoices()
+  val smd = synthesizer.getEngineModeDesc.asInstanceOf[SynthesizerModeDesc]
+  val voices = smd.getVoices
 
   var voice: Voice = null
 
   def init(voiceName: String, outputFile: String) {
     for (v <- voices) {
-      if (v.getName().equals(voiceName)) {
+      if (v.getName.equals(voiceName)) {
         voice = v
-        val audioPlayer = new SingleFileAudioPlayer(outputFile, Type.WAVE);
+        val audioPlayer = new SingleFileAudioPlayer(outputFile, Type.WAVE)
         voice.asInstanceOf[com.sun.speech.freetts.jsapi.FreeTTSVoice].getVoice.setAudioPlayer(audioPlayer)
-        synthesizer.getSynthesizerProperties().setVoice(voice);
+        synthesizer.getSynthesizerProperties.setVoice(voice)
         return
       }
     }
@@ -156,4 +154,4 @@ object SpeechUtils {
     synthesizer.speakPlainText(speakText, null);
     synthesizer.waitEngineState(Synthesizer.QUEUE_EMPTY);
   }
-}  
+}

@@ -1,11 +1,10 @@
 package org.arnoldc.ast
 
-import org.objectweb.asm.MethodVisitor
-import org.objectweb.asm.Opcodes._
 import org.arnoldc.SymbolTable
+import org.objectweb.asm.MethodVisitor
 
-case class NumberNode(number: Int) extends OperandNode {
+case class NumberNode(number: Float) extends OperandNode {
   def generate(mv: MethodVisitor, symbolTable: SymbolTable) {
-    mv.visitIntInsn(SIPUSH, number)
+    mv.visitLdcInsn(number)
   }
 }

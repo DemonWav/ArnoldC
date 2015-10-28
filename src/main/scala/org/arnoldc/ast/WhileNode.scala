@@ -13,6 +13,8 @@ case class WhileNode(condition: OperandNode, statements: List[AstNode]) extends 
     mv.visitLabel(loopStart)
     mv.visitFrame(F_FULL, symbolTable.size(), symbolTable.getStackFrame, 0, null)
     condition.generate(mv, symbolTable)
+    mv.visitInsn(FCONST_0)
+    mv.visitInsn(FCMPL)
     mv.visitJumpInsn(IFEQ, loopEnd)
     statements.foreach(_.generate(mv, symbolTable))
     mv.visitJumpInsn(GOTO, loopStart)

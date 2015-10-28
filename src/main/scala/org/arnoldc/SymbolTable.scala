@@ -17,7 +17,7 @@ case class SymbolTable(upperLevel: Option[SymbolTable], currentMethod: String) {
   }
 
   def getStackFrame: Array[AnyRef] = {
-    Stream.iterate(INTEGER: AnyRef) {
+    Stream.iterate(FLOAT: AnyRef) {
       i => i
     }.take(size()).toArray
   }
@@ -50,12 +50,12 @@ case class SymbolTable(upperLevel: Option[SymbolTable], currentMethod: String) {
     else {
       val method = getMethodInformation(methodName)
       val numberOfArguments = method.numberOfArguments
-      val returnValue = if (method.returnsValue) "I" else "V"
-      "(" + "I" * numberOfArguments + ")" + returnValue
+      val returnValue = if (method.returnsValue) "F" else "V"
+      "(" + "F" * numberOfArguments + ")" + returnValue
     }
   }
 
-  def getCurrentMethod(): MethodInformation = {
+  def getCurrentMethod: MethodInformation = {
     getMethodInformation(currentMethod)
   }
 
@@ -68,12 +68,12 @@ case class SymbolTable(upperLevel: Option[SymbolTable], currentMethod: String) {
     })
   }
 
-  def getFileName(): String = {
+  def getFileName: String = {
     if (upperLevel.isEmpty) {
       currentMethod
     }
     else {
-      upperLevel.get.getFileName()
+      upperLevel.get.getFileName
     }
   }
 

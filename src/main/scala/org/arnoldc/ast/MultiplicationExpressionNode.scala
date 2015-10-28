@@ -8,6 +8,6 @@ case class MultiplicationExpressionNode(expression: AstNode ,operand: AstNode ) 
   def generate(mv: MethodVisitor, symbolTable: SymbolTable) {
     expression.generate(mv, symbolTable)
     operand.generate(mv, symbolTable)
-    mv.visitInsn(IMUL)
+    mv.visitInsn(FMUL)
   }
 }

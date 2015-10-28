@@ -18,7 +18,7 @@ object ArnoldC {
     else {
       filename
     }
-    val (bytecode, root) = a.generate(sourceCode, classFilename)
+    val (bytecode, root) = a.generate(sourceCode, classFilename, filename)
 
     val out = new FileOutputStream(classFilename + ".class")
     out.write(bytecode)
@@ -27,7 +27,7 @@ object ArnoldC {
     processOption(getCommandFromArgs(args), classFilename, root)
 
   }
-  
+
   def getFilNameFromArgs(args:Array[String]):String = args.length match {
     case 1 => args(0)
     case 2 => args(1)

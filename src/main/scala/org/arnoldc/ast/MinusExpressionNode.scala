@@ -8,6 +8,6 @@ case class MinusExpressionNode(expression: AstNode, operand: AstNode) extends As
   def generate(mv: MethodVisitor, symbolTable: SymbolTable) {
     expression.generate(mv, symbolTable)
     operand.generate(mv, symbolTable)
-    mv.visitInsn(ISUB)
+    mv.visitInsn(FSUB)
   }
 }

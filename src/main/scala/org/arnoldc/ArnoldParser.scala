@@ -1,7 +1,7 @@
 package org.arnoldc
 
+import org.parboiled.errors.{ParsingException, ErrorUtils}
 import org.parboiled.scala._
-import org.parboiled.errors.{ErrorUtils, ParsingException}
 import org.arnoldc.ast._
 
 class ArnoldParser extends Parser {
@@ -9,7 +9,7 @@ class ArnoldParser extends Parser {
 
   val ParseError = "WHAT THE FUCK DID I DO WRONG"
 
-  val DeclareInt = "HEY CHRISTMAS TREE"
+  val DeclareNum = "HEY CHRISTMAS TREE"
   val SetInitialValue = "YOU SET US UP"
   val BeginMain = "IT'S SHOWTIME"
   val PlusOperator = "GET UP"
@@ -59,13 +59,13 @@ class ArnoldParser extends Parser {
 
   def Method: Rule1[AbstractMethodNode] = rule {
     DeclareMethod ~ WhiteSpace ~ VariableName ~> (s => s) ~ EOL ~
-      zeroOrMore((MethodArguments ~ WhiteSpace ~ Variable ~ EOL)) ~
+      zeroOrMore(MethodArguments ~ WhiteSpace ~ Variable ~ EOL) ~
       (NonVoidMethod | "") ~> ((m: String) => m == NonVoidMethod) ~ optional(EOL) ~
       zeroOrMore(Statement) ~ EndMethodDeclaration ~~> MethodNode
   }
 
   def Statement: Rule1[StatementNode] = rule {
-    DeclareIntStatement | PrintStatement |
+    DeclareNumStatement | PrintStatement |
       AssignVariableStatement | ConditionStatement |
       WhileStatement | CallMethodStatement | ReturnStatement | CallReadMethodStatement
   }
@@ -96,8 +96,8 @@ class ArnoldParser extends Parser {
     Print ~ WhiteSpace ~ (Operand ~~> PrintNode | "\"" ~ String ~ "\"" ~~> PrintNode) ~ EOL
   }
 
-  def DeclareIntStatement: Rule1[DeclareIntNode] = rule {
-    DeclareInt ~ WhiteSpace ~ VariableName ~> (s => s) ~ EOL ~ SetInitialValue ~ WhiteSpace ~ Operand ~~> DeclareIntNode ~ EOL
+  def DeclareNumStatement: Rule1[DeclareNumNode] = rule {
+    DeclareNum ~ WhiteSpace ~ VariableName ~> (s => s) ~ EOL ~ SetInitialValue ~ WhiteSpace ~ Operand ~~> DeclareNumNode ~ EOL
   }
 
   def AssignVariableStatement: Rule1[AssignVariableNode] = rule {
@@ -114,7 +114,7 @@ class ArnoldParser extends Parser {
 
   def Expression: Rule1[AstNode] = rule {
     SetValueExpression ~
-      (zeroOrMore(ArithmeticOperation | LogicalOperation))
+      zeroOrMore(ArithmeticOperation | LogicalOperation)
   }
 
   def LogicalOperation: ReductionRule1[AstNode, AstNode] = rule {
@@ -181,8 +181,10 @@ class ArnoldParser extends Parser {
   }
 
   def Number: Rule1[NumberNode] = rule {
-    oneOrMore("0" - "9") ~> ((matched: String) => NumberNode(matched.toInt)) |
-      "-" ~ oneOrMore("0" - "9") ~> ((matched: String) => NumberNode(-matched.toInt))
+    oneOrMore("0" - "9") ~> ((matched: String) => NumberNode(matched.toFloat)) |
+      "-" ~ oneOrMore("0" - "9") ~> ((matched: String) => NumberNode(-matched.toFloat)) |
+      oneOrMore("0" - "9") ~ "." ~ oneOrMore("0" - "9") ~> ((matched: String) => NumberNode(matched.toFloat)) |
+      "-" ~ oneOrMore("0" - "9") ~ "." ~ oneOrMore("0" - "9") ~> ((matched: String) => NumberNode(matched.toFloat))
   }
 
   def Boolean: Rule1[NumberNode] = rule {

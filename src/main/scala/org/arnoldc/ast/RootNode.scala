@@ -6,9 +6,9 @@ import org.arnoldc.{MethodInformation, SymbolTable}
 
 case class RootNode(methods: List[AbstractMethodNode]) extends AstNode {
 
-  def generateByteCode(filename: String): Array[Byte] = {
-    val globalSymbols = storeMethodSignatures(filename)
-    generateClass(filename, globalSymbols).toByteArray
+  def generateByteCode(className: String, fileName: String): Array[Byte] = {
+    val globalSymbols = storeMethodSignatures(className)
+    generateClass(className, globalSymbols, fileName).toByteArray
   }
 
   def generate(mv: MethodVisitor, symbolTable: SymbolTable) {
@@ -25,11 +25,11 @@ case class RootNode(methods: List[AbstractMethodNode]) extends AstNode {
     globalSymbols
   }
 
-  def generateClass(className: String, globalSymbols: SymbolTable): ClassWriter = {
+  def generateClass(className: String, globalSymbols: SymbolTable, fileName: String): ClassWriter = {
     val cw = new ClassWriter(0)
     def generateClassHeader() = {
       cw.visit(V1_7, ACC_PUBLIC + ACC_SUPER, className, null, "java/lang/Object", null)
-      cw.visitSource("Hello.java", null)
+      cw.visitSource(fileName, null)
       val mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null)
       mv.visitVarInsn(ALOAD, 0)
       mv.visitMethodInsn(INVOKESPECIAL,

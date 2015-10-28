@@ -5,9 +5,9 @@ import org.arnoldc.ast.RootNode
 
 class ArnoldGenerator extends ClassLoader {
 
-  def generate(arnoldCode: String, filename: String): (Array[Byte], RootNode) = {
+  def generate(arnoldCode: String, className: String, fileName: String): (Array[Byte], RootNode) = {
     val parser = new ArnoldParser
     val rootNode = parser.parse(arnoldCode)
-    (rootNode.generateByteCode(filename), rootNode)
+    (rootNode.generateByteCode(className, fileName), rootNode)
   }
 }

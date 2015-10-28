@@ -8,6 +8,6 @@ case class DivisionExpressionNode(expression: AstNode ,operand: AstNode ) extend
   def generate(mv: MethodVisitor, symbolTable: SymbolTable) {
     expression.generate(mv, symbolTable)
     operand.generate(mv, symbolTable)
-    mv.visitInsn(IDIV)
+    mv.visitInsn(FDIV)
   }
 }

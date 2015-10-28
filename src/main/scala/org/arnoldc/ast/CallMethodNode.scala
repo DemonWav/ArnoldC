@@ -14,15 +14,15 @@ case class CallMethodNode(returnVar: String, methodName: String, arguments: List
         "EXPECTED: " + argumentsExpected + ", GOT: " + arguments.size)
     }
     arguments.foreach(_.generate(mv, symbolTable))
-    mv.visitMethodInsn(INVOKESTATIC, symbolTable.getFileName(), methodName, symbolTable.getMethodDescription(methodName))
-    handleStackAfterCall
+    mv.visitMethodInsn(INVOKESTATIC, symbolTable.getFileName, methodName, symbolTable.getMethodDescription(methodName))
+    handleStackAfterCall()
 
-    def handleStackAfterCall {
+    def handleStackAfterCall() {
       if (returnVar != "") {
         if (!symbolTable.getMethodInformation(methodName).returnsValue) {
           throw new ParsingException("CANNOT ASSIGN VALUE TO VARIABLE " + returnVar + ", METHOD " + methodName + " IS A TYPE OF VOID")
         }
-        mv.visitVarInsn(ISTORE, symbolTable.getVariableAddress(returnVar))
+        mv.visitVarInsn(FSTORE, symbolTable.getVariableAddress(returnVar))
       }
       else if (symbolTable.getMethodInformation(methodName).returnsValue) {
         mv.visitInsn(POP)

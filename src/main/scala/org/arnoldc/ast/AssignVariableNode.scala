@@ -8,6 +8,6 @@ case class AssignVariableNode(variable: String, expression: AstNode) extends Sta
   def generate(mv: MethodVisitor, symbolTable: SymbolTable) {
     val variableAddress = symbolTable.getVariableAddress(variable)
     expression.generate(mv, symbolTable)
-    mv.visitVarInsn(ISTORE, variableAddress)
+    mv.visitVarInsn(FSTORE, variableAddress)
   }
 }
